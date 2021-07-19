@@ -6,7 +6,7 @@
         <div class="container-sm bg-light">
             <div class="search-box border m-3 p-2 d-flex bg-white">
                 <div class="search-input-box d-flex flex-grow-1" data-toggle="dropdown">
-                    <input class="search-input flex-grow-1" data-keystatus="false" type="text" style="border: 0; outline:0;"/>
+                    <input class="search-input flex-grow-1" data-value-mode="false" type="text" style="border: 0; outline:0;"/>
                 </div>
                 <div class="search-menu dropdown-menu mt-3" aria-labelledby="dropdownMenuButton">
                 </div>
@@ -24,6 +24,7 @@
         let searchInputBox = {};
         let searchInput = {};
         const keyItem = '<div class="search-key px-1 mr-1" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
+        const valueItem = '<div class="search-key px-1 mr-1" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
         const menuItem = '<a class="menu-search-key dropdown-item" data-key="{}" href="#">{}</a>';
         const keys = ['Placa', 'Marca', 'Modelo'];
         
@@ -57,7 +58,22 @@
         }
 
         function addKeyToSearchBox(key) {
+            setValueMode();
             searchInputBox.before(formatTemplate(key, keyItem))
+        }
+
+        function setValueMode() {
+            searchInput.data('value-mode', true);
+            searchInputBox.attr('data-toggle', '');
+            searchMenu.hide();
+        }
+
+        function setKeyMode() {
+            searchInput.data('value-mode', false);
+            searchInputBox.attr('data-toggle', 'dropdown');
+            searchInputBox.data('toggle', 'dropdown');
+            searchMenu.dropdown('update')
+            searchMenu.show();
         }
 
         function handleInputKeyPress(event) {
@@ -65,12 +81,26 @@
             let key = event.key;
             if (inputValue.length === 0 && key === 'Backspace')
                 removeLastKeyFromSearchBox();
+            
+            if (searchInput.data('value-mode')) {
+
+                if (key === ' ' || key == 'Enter')
+                    createSearchValueFromInput();
+            }
         }
 
         function removeLastKeyFromSearchBox() {
             let keyItens = $('.search-key');
             if (keyItens.length > 0)
                 keyItens.last().remove();
+            setKeyMode();
+        }
+
+        function createSearchValueFromInput() {
+            let inputValue = searchInput.val();
+            searchInputBox.before(formatTemplate(inputValue, valueItem));
+            searchInput.val('');
+            setKeyMode();
         }
     </script>
 </html>
