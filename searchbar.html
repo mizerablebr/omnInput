@@ -24,7 +24,7 @@
         let searchInputBox = {};
         let searchInput = {};
         const keyItem = '<div class="search-item search-key px-1 mr-1 text-uppercase" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
-        const valueItem = '<div class="search-item search-value px-1 mr-1 text-uppercase" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
+        const valueItem = '<div class="search-item search-value px-1 mr-2 text-uppercase" style="background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
         const menuItem = '<a class="menu-search-key dropdown-item" data-key="{}" href="#">{}</a>';
         const keys = ['Placa', 'Marca', 'Modelo'];
         
@@ -55,9 +55,11 @@
 
         function addListenerToSearchInput() {
             searchInput.keydown(handleInputKeyPress);
+            searchInput.keyup(filterSearchMenuUsingInputValue);
         }
 
         function addKeyToSearchBox(key) {
+            searchInput.val('');
             setValueMode();
             searchInputBox.before(formatTemplate(key, keyItem))
         }
@@ -107,6 +109,19 @@
             searchInputBox.before(formatTemplate(inputValue, valueItem));
             searchInput.val('');
             setKeyMode();
+        }
+
+        function filterSearchMenuUsingInputValue(event) {
+            if (!searchInput.data('value-mode')) {
+                let inputValue = event.target.value;
+                let keysThatDontMatchInput = keys.filter(value => !value.toUpperCase().includes(inputValue.toUpperCase()));
+                $('.menu-search-key').each((index, menuSearchKey) => {
+                    if (keysThatDontMatchInput.includes(menuSearchKey.dataset.key))
+                        $(menuSearchKey).hide();
+                    else
+                        $(menuSearchKey).show();
+                })
+            }
         }
     </script>
 </html>
