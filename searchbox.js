@@ -8,7 +8,7 @@ class SearchBox {
         this.searchInput = {};
         this.searchBoxContainerTemplate = '<div class="search-box border m-3 p-2 d-flex bg-white"><div class="search-input-box d-flex flex-grow-1" data-toggle="dropdown"><input class="search-input flex-grow-1 text-uppercase" data-value-mode="false" type="text" style="border: 0; outline:0;"/></div><div class="search-menu dropdown-menu mt-3" aria-labelledby="dropdownMenuButton"></div></div>'
         this.keyItem = '<div class="search-item search-key px-1 mr-1 text-uppercase" data-key="{}" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
-        this.valueItem = '<div class="search-item search-value px-1 mr-2 text-uppercase" style="background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
+        this.valueItem = '<div class="search-item search-value px-1 mr-2 text-uppercase" data-value="{}" style="background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
         this.menuItem = '<a class="menu-search-key dropdown-item" data-key="{}" href="#">{}</a>';
         this.containerId = 'searchBoxContainer';
 
@@ -140,5 +140,22 @@ class SearchBox {
             })
         }
     }
+
+    sendData() {
+        this.ifInputNotEmptyAndOnValueModeCreateValueItem();
+        console.log('send data');
+        let keyValues = this.searchBox.children().map( (index, searchKey) => {
+            return 'key' in searchKey.dataset ? searchKey.dataset.key : searchKey.dataset.value;
+        }).toArray();
+        console.log(keyValues);
+    }
+
+    ifInputNotEmptyAndOnValueModeCreateValueItem() {
+        if (this.searchInput.data('value-mode')) {
+            this.createSearchValueFromInput();
+            this.searchInput.val('');
+        }
+    }
+    
 
 }
