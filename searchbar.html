@@ -14,8 +14,8 @@
     <script>
         $(document).ready(function() {
             console.log('creating');
-            var searchBox = SearchBox.create(['Placa', 'Marca', 'Modelo'], 'searchBoxContainer');
-            $('#sendButton').click(function() {searchBox.sendData()});
+            var searchBox = SearchBox.create([{label: 'Placa', id: 'placa'}, {label: 'Marca', id: 'marca'}, {label: 'Modelo', id: 'modelo'}], 'searchBoxContainer', '/post');
+            $('#sendButton').click(function() {searchBox.sendData({key: '_csrf', value: 'haduken'})});
         });
         
     </script>

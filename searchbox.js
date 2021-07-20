@@ -1,7 +1,8 @@
 class SearchBox {
-    constructor(keys, containerId) {
+    constructor(keys, containerId, action) {
         this.keys = keys;
         this.containerId = containerId;
+        this.action = action;
         this.searchMenu = {};
         this.searchBox = {};
         this.searchInputBox = {};
@@ -19,8 +20,8 @@ class SearchBox {
     }
 
     static create(keys, containerId) {
-        if (!Array.isArray(keys))
-            throw "Use Array of String as Keys";
+        if (!Array.isArray(keys) || keys[0].label === undefined || keys[0].id === undefined)
+            throw "Each item from the Array Keys must be a Object containing Label and Id. Ex.: {label: 'My Label', id: 'myId'}"
         return new SearchBox(keys, containerId);
     }
 
@@ -37,7 +38,7 @@ class SearchBox {
         this.searchInput = $('.search-input');
 
         this.keys.forEach(function(item) {
-            this.searchMenu.append(this.formatTemplate(item, this.menuItem));
+            this.searchMenu.append(this.formatTemplate(item.label, this.menuItem));
         }, this);
     }
 
@@ -68,10 +69,10 @@ class SearchBox {
             let usedKeys = searchKeys.map( (index, searchKey) => {
                 return searchKey.dataset.key;
             }).toArray();
-            let keysToDisplay = this.keys.filter(key => !usedKeys.includes(key));
+            let keysToDisplay = this.keys.filter(key => !usedKeys.includes(key.label));
             this.searchMenu.children().remove();
             keysToDisplay.forEach(function(item) {
-                this.searchMenu.append(this.formatTemplate(item, this.menuItem));
+                this.searchMenu.append(this.formatTemplate(item.label, this.menuItem));
                 this.addListenerToSearchKeys();
             }, this);
         }
@@ -131,7 +132,7 @@ class SearchBox {
     filterSearchMenuUsingInputValue(event) {
         if (!event.data.searchInput.data('value-mode')) {
             let inputValue = event.target.value.trim();
-            let keysThatDontMatchInput = event.data.keys.filter(value => !value.toUpperCase().includes(inputValue.toUpperCase()));
+            let keysThatDontMatchInput = event.data.keys.filter(value => !value.label.toUpperCase().includes(inputValue.toUpperCase()));
             $('.menu-search-key').each((index, menuSearchKey) => {
                 if (keysThatDontMatchInput.includes(menuSearchKey.dataset.key))
                     $(menuSearchKey).hide();
@@ -141,7 +142,7 @@ class SearchBox {
         }
     }
 
-    sendData() {
+    sendData(aditionalFormInput) {
         this.ifInputNotEmptyAndOnValueModeCreateValueItem();
         console.log('send data');
         let keyValues = this.searchBox.children().map( (index, searchKey) => {
@@ -150,13 +151,13 @@ class SearchBox {
 
         let form = document.createElement('form');
         form.setAttribute('method', 'POST');
-        form.setAttribute('action', '/');
+        form.setAttribute('action', '/post');
 
         let inputId = '';
         let inputValue = '';
         keyValues.forEach( (item, index) => {
                 if(this.isKey(index))
-                    inputId = item;
+                    inputId = this.getIdFromLabel(item);
                 else
                     inputValue = item;
                 
@@ -167,8 +168,20 @@ class SearchBox {
                 }
                 
         })
+
+        if (aditionalFormInput !== undefined) {
+            if (aditionalFormInput.key === undefined || aditionalFormInput.value === undefined)
+                throw "Invalid aditionalFormInput on sendDataMethod. Example of valid aditionalFormInput: {key: 'myKey', value: 'myValue'}";
+            this.createFormInput(aditionalFormInput.key, aditionalFormInput.value, form);
+        }
+
         document.getElementsByTagName('body')[0].appendChild(form);
+        form.submit();
         console.log(keyValues);
+    }
+
+    getIdFromLabel(label) {
+        return this.keys.filter(key => key.label === label)[0].id;
     }
 
     ifInputNotEmptyAndOnValueModeCreateValueItem() {
@@ -191,5 +204,4 @@ class SearchBox {
 
         form.appendChild(input);
     }
-
 }
