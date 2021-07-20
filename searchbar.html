@@ -16,7 +16,8 @@
             console.log('creating');
             const keys = [{label: 'Placa', id: 'placa'}, {label: 'Marca', id: 'marca'}, {label: 'Modelo', id: 'modelo'}];
             var searchBox = SearchBox.create(keys, 'searchBoxContainer', '/post');
-            $('#sendButton').click(function() {searchBox.sendData({key: '_csrf', value: 'haduken'})});
+            searchBox.aditionalFormInput({key: '_csrf', value: 'haduken'});
+            $('#sendButton').click(function() {searchBox.sendData()});
 
             searchBox.loadFromObject({"placa": "abc1234", "modelo": "fusca"});
         });

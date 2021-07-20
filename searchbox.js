@@ -19,6 +19,11 @@ class SearchBox {
         this.addListenerToSearchInput();
     }
 
+    aditionalFormInput(aditionalInput) {
+        this.aditionalInput = aditionalInput;
+        return this;
+    }
+
     static create(keys, containerId) {
         if (!Array.isArray(keys) || keys[0].label === undefined || keys[0].id === undefined)
             throw "Each item from the Array Keys must be a Object containing Label and Id. Ex.: {label: 'My Label', id: 'myId'}"
@@ -54,6 +59,11 @@ class SearchBox {
     addListenerToSearchInput() {
         this.searchInput.on('keydown', this, this.handleInputKeyPress);
         this.searchInput.on('keyup', this, this.filterSearchMenuUsingInputValue);
+        this.searchInput.on('focusout', this, this.checkIfNeedToCreateValueFromEvent);
+    }
+
+    checkIfNeedToCreateValueFromEvent(event) {
+        event.data.checkIfNeedToCreateValueFromInput();
     }
 
     addKeyToSearchBox(key) {
@@ -99,6 +109,9 @@ class SearchBox {
         if (inputValue.length === 0 && key === 'Backspace')
             event.data.removeLastKeyFromSearchBox();
         
+        if (inputValue.length === 0 && key === 'Enter')
+            event.data.sendData();
+
         if (event.data.searchInput.data('value-mode')) {
 
             if (key === ' ' || key == 'Enter') {
@@ -146,8 +159,8 @@ class SearchBox {
         }
     }
 
-    sendData(aditionalFormInput) {
-        this.ifInputNotEmptyAndOnValueModeCreateValueItem();
+    sendData() {
+        this.checkIfNeedToCreateValueFromInput();
         console.log('send data');
         let keyValues = this.searchBox.children().map( (index, searchKey) => {
             return 'key' in searchKey.dataset ? searchKey.dataset.key : searchKey.dataset.value;
@@ -173,10 +186,10 @@ class SearchBox {
                 
         })
 
-        if (aditionalFormInput !== undefined) {
-            if (aditionalFormInput.key === undefined || aditionalFormInput.value === undefined)
+        if (this.aditionalInput !== undefined) {
+            if (this.aditionalInput.key === undefined || this.aditionalInput.value === undefined)
                 throw "Invalid aditionalFormInput on sendDataMethod. Example of valid aditionalFormInput: {key: 'myKey', value: 'myValue'}";
-            this.createFormInput(aditionalFormInput.key, aditionalFormInput.value, form);
+            this.createFormInput(this.aditionalInput.key, this.aditionalInput.value, form);
         }
 
         document.getElementsByTagName('body')[0].appendChild(form);
@@ -188,8 +201,9 @@ class SearchBox {
         return this.keys.filter(key => key.label === label)[0].id;
     }
 
-    ifInputNotEmptyAndOnValueModeCreateValueItem() {
-        if (this.searchInput.data('value-mode')) {
+    checkIfNeedToCreateValueFromInput() {
+        let isValueMode = this.searchInput.data('value-mode');
+        if (isValueMode) {
             this.createSearchValueFromInput();
             this.searchInput.val('');
         }
