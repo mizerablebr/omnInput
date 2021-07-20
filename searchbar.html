@@ -23,7 +23,7 @@
         let searchBox = {};
         let searchInputBox = {};
         let searchInput = {};
-        const keyItem = '<div class="search-item search-key px-1 mr-1 text-uppercase" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
+        const keyItem = '<div class="search-item search-key px-1 mr-1 text-uppercase" data-key="{}" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
         const valueItem = '<div class="search-item search-value px-1 mr-2 text-uppercase" style="background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
         const menuItem = '<a class="menu-search-key dropdown-item" data-key="{}" href="#">{}</a>';
         const keys = ['Placa', 'Marca', 'Modelo'];
@@ -47,7 +47,9 @@
         }
 
         function addListenerToSearchKeys() {
-            $('.menu-search-key').click(function(event){
+            const menuSearchKeys = $('.menu-search-key');
+            menuSearchKeys.off();
+            menuSearchKeys.click(function(event){
                 addKeyToSearchBox(event.target.dataset.key);
                 searchInput.focus();
             });
@@ -62,11 +64,28 @@
             searchInput.val('');
             setValueMode();
             searchInputBox.before(formatTemplate(key, keyItem))
+            updateSearchMenu();
+        }
+
+        function updateSearchMenu() {
+            let searchKeys = $('.search-key');
+            if (searchKeys.length > 0) {
+                let usedKeys = searchKeys.map( (index, searchKey) => {
+                    return searchKey.dataset.key;
+                }).toArray();
+                let keysToDisplay = keys.filter(key => !usedKeys.includes(key));
+                searchMenu.children().remove();
+                keysToDisplay.forEach(function(item) {
+                searchMenu.append(formatTemplate(item, menuItem));
+                addListenerToSearchKeys();
+            });
+            }
         }
 
         function setValueMode() {
             searchInput.data('value-mode', true);
             searchInputBox.attr('data-toggle', '');
+            searchMenu.dropdown('update')
             searchMenu.hide();
         }
 
@@ -86,8 +105,10 @@
             
             if (searchInput.data('value-mode')) {
 
-                if (key === ' ' || key == 'Enter')
+                if (key === ' ' || key == 'Enter') {
                     createSearchValueFromInput();
+                    searchInput.val('');
+                }
             }
         }
 
@@ -101,6 +122,7 @@
                     setValueMode();
                 
                 searchItens.last().remove();
+                updateSearchMenu();
             }
         }
 
@@ -113,7 +135,7 @@
 
         function filterSearchMenuUsingInputValue(event) {
             if (!searchInput.data('value-mode')) {
-                let inputValue = event.target.value;
+                let inputValue = event.target.value.trim();
                 let keysThatDontMatchInput = keys.filter(value => !value.toUpperCase().includes(inputValue.toUpperCase()));
                 $('.menu-search-key').each((index, menuSearchKey) => {
                     if (keysThatDontMatchInput.includes(menuSearchKey.dataset.key))
