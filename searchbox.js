@@ -147,6 +147,27 @@ class SearchBox {
         let keyValues = this.searchBox.children().map( (index, searchKey) => {
             return 'key' in searchKey.dataset ? searchKey.dataset.key : searchKey.dataset.value;
         }).toArray();
+
+        let form = document.createElement('form');
+        form.setAttribute('method', 'POST');
+        form.setAttribute('action', '/');
+
+        let inputId = '';
+        let inputValue = '';
+        keyValues.forEach( (item, index) => {
+                if(this.isKey(index))
+                    inputId = item;
+                else
+                    inputValue = item;
+                
+                if (inputId !== '' && inputValue !== '') {
+                    this.createFormInput(inputId, inputValue, form);
+                    inputId = '';
+                    inputValue = '';
+                }
+                
+        })
+        document.getElementsByTagName('body')[0].appendChild(form);
         console.log(keyValues);
     }
 
@@ -157,5 +178,18 @@ class SearchBox {
         }
     }
     
+    isKey(index) {
+        return index % 2 === 0;
+    }
+
+    createFormInput(inputId, inputValue, form) {
+        let input = document.createElement("input");
+        input.setAttribute('type',"hidden");
+        input.setAttribute('id',inputId);
+        input.setAttribute('name',inputId);
+        input.setAttribute('value',inputValue);
+
+        form.appendChild(input);
+    }
 
 }
