@@ -14,8 +14,11 @@
     <script>
         $(document).ready(function() {
             console.log('creating');
-            var searchBox = SearchBox.create([{label: 'Placa', id: 'placa'}, {label: 'Marca', id: 'marca'}, {label: 'Modelo', id: 'modelo'}], 'searchBoxContainer', '/post');
+            const keys = [{label: 'Placa', id: 'placa'}, {label: 'Marca', id: 'marca'}, {label: 'Modelo', id: 'modelo'}];
+            var searchBox = SearchBox.create(keys, 'searchBoxContainer', '/post');
             $('#sendButton').click(function() {searchBox.sendData({key: '_csrf', value: 'haduken'})});
+
+            searchBox.loadFromObject({"placa": "abc1234", "modelo": "fusca"});
         });
         
     </script>

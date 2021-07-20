@@ -124,7 +124,11 @@ class SearchBox {
 
     createSearchValueFromInput() {
         let inputValue = this.searchInput.val();
-        this.searchInputBox.before(this.formatTemplate(inputValue, this.valueItem));
+        this.addValueToSearchBox(inputValue);
+    }
+
+    addValueToSearchBox(value) {
+        this.searchInputBox.before(this.formatTemplate(value, this.valueItem));
         this.searchInput.val('');
         this.setKeyMode();
     }
@@ -203,5 +207,23 @@ class SearchBox {
         input.setAttribute('value',inputValue);
 
         form.appendChild(input);
+    }
+
+    loadFromObject(objectToLoad) {
+        Object.entries(objectToLoad).forEach(entry => this.addSearchKeyAndValueFromEntry(entry));
+    }
+
+    addSearchKeyAndValueFromEntry(entry) {
+        let value = entry[1];
+        if (value !== null && value !== undefined) {
+            let id = entry[0];
+            let keyLabel = this.getLabelFromId(id);
+            this.addKeyToSearchBox(keyLabel);
+            this.addValueToSearchBox(value);
+        }
+    }
+
+    getLabelFromId(id) {
+        return this.keys.filter(key => key.id === id)[0].label;
     }
 }
