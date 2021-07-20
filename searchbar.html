@@ -6,7 +6,7 @@
         <div class="container-sm bg-light">
             <div class="search-box border m-3 p-2 d-flex bg-white">
                 <div class="search-input-box d-flex flex-grow-1" data-toggle="dropdown">
-                    <input class="search-input flex-grow-1" data-value-mode="false" type="text" style="border: 0; outline:0;"/>
+                    <input class="search-input flex-grow-1 text-uppercase" data-value-mode="false" type="text" style="border: 0; outline:0;"/>
                 </div>
                 <div class="search-menu dropdown-menu mt-3" aria-labelledby="dropdownMenuButton">
                 </div>
@@ -23,8 +23,8 @@
         let searchBox = {};
         let searchInputBox = {};
         let searchInput = {};
-        const keyItem = '<div class="search-key px-1 mr-1" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
-        const valueItem = '<div class="search-key px-1 mr-1" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
+        const keyItem = '<div class="search-item search-key px-1 mr-1 text-uppercase" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
+        const valueItem = '<div class="search-item search-value px-1 mr-1 text-uppercase" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
         const menuItem = '<a class="menu-search-key dropdown-item" data-key="{}" href="#">{}</a>';
         const keys = ['Placa', 'Marca', 'Modelo'];
         
@@ -90,10 +90,16 @@
         }
 
         function removeLastKeyFromSearchBox() {
-            let keyItens = $('.search-key');
-            if (keyItens.length > 0)
-                keyItens.last().remove();
-            setKeyMode();
+            let searchItens = $('.search-item');
+            if (searchItens.length > 0) {
+                let lastKey = searchItens.last();
+                if (lastKey.hasClass('search-key'))
+                    setKeyMode();
+                else
+                    setValueMode();
+                
+                searchItens.last().remove();
+            }
         }
 
         function createSearchValueFromInput() {
