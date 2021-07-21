@@ -42,6 +42,8 @@ class SearchBox {
         this.searchInputBox = $('.search-input-box');
         this.searchInput = $('.search-input');
 
+        this.searchInputBox.dropdown();
+
         this.displayDefaultMenuKeys();
     }
 
@@ -72,11 +74,10 @@ class SearchBox {
     }
 
     showSearchMenu(event) {
-        console.log('focus');
         setTimeout(function() {
-            if (!event.data.searchMenu.hasClass('show'))
-            $('.search-input-box').dropdown('toggle');
-        }, 150); //workaround to fire only after the click event
+            if (event.data.searchMenu.is(':hidden'))
+                event.data.searchInputBox.dropdown('toggle');
+        }, 150);
     }
 
     addKeyToSearchBox(key) {
@@ -101,17 +102,19 @@ class SearchBox {
 
     setValueMode() {
         this.searchInput.data('value-mode', true);
-        this.searchInputBox.attr('data-toggle', '');
-        this.searchMenu.dropdown('update')
-        this.searchMenu.hide();
+        this.searchInputBox.dropdown('update')
+        if (this.searchMenu.is(':visible'))
+            this.searchInputBox.dropdown('toggle')
+
+        this.searchInputBox.addClass('disabled');
     }
 
     setKeyMode() {
         this.searchInput.data('value-mode', false);
-        this.searchInputBox.attr('data-toggle', 'dropdown');
-        this.searchInputBox.data('toggle', 'dropdown');
-        this.searchMenu.dropdown('update')
-        this.searchMenu.show();
+        this.searchInputBox.removeClass('disabled');
+        this.searchInputBox.dropdown('update')
+        if (this.searchMenu.is(':hidden'))
+            this.searchInputBox.dropdown('toggle')
     }
 
     handleInputKeyPress(event) {
@@ -174,7 +177,6 @@ class SearchBox {
 
     sendData() {
         this.checkIfNeedToCreateValueFromInput();
-        console.log('send data');
         let keyValues = this.searchBox.children().map( (index, searchKey) => {
             return 'key' in searchKey.dataset ? searchKey.dataset.key : searchKey.dataset.value;
         }).toArray();
@@ -207,7 +209,6 @@ class SearchBox {
 
         document.getElementsByTagName('body')[0].appendChild(form);
         form.submit();
-        console.log(keyValues);
     }
 
     getIdFromLabel(label) {
@@ -238,6 +239,8 @@ class SearchBox {
 
     loadFromObject(objectToLoad) {
         Object.entries(objectToLoad).forEach(entry => this.addSearchKeyAndValueFromEntry(entry));
+        if (this.searchMenu.is(':visible'))
+            this.searchInputBox.dropdown('toggle')
     }
 
     addSearchKeyAndValueFromEntry(entry) {
