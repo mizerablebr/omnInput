@@ -42,6 +42,10 @@ class SearchBox {
         this.searchInputBox = $('.search-input-box');
         this.searchInput = $('.search-input');
 
+        this.displayDefaultMenuKeys();
+    }
+
+    displayDefaultMenuKeys() {
         this.keys.forEach(function(item) {
             this.searchMenu.append(this.formatTemplate(item.label, this.menuItem));
         }, this);
@@ -75,17 +79,15 @@ class SearchBox {
 
     updateSearchMenu() {
         let searchKeys = $('.search-key');
-        if (searchKeys.length > 0) {
-            let usedKeys = searchKeys.map( (index, searchKey) => {
-                return searchKey.dataset.key;
-            }).toArray();
-            let keysToDisplay = this.keys.filter(key => !usedKeys.includes(key.label));
-            this.searchMenu.children().remove();
-            keysToDisplay.forEach(function(item) {
-                this.searchMenu.append(this.formatTemplate(item.label, this.menuItem));
-                this.addListenerToSearchKeys();
-            }, this);
-        }
+        let usedKeys = searchKeys.map( (index, searchKey) => {
+            return searchKey.dataset.key;
+        }).toArray();
+        let keysToDisplay = this.keys.filter(key => !usedKeys.includes(key.label));
+        this.searchMenu.children().remove();
+        keysToDisplay.forEach(function(item) {
+            this.searchMenu.append(this.formatTemplate(item.label, this.menuItem));
+            this.addListenerToSearchKeys();
+        }, this);
     }
 
     setValueMode() {
