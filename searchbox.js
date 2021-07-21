@@ -64,10 +64,19 @@ class SearchBox {
         this.searchInput.on('keydown', this, this.handleInputKeyPress);
         this.searchInput.on('keyup', this, this.filterSearchMenuUsingInputValue);
         this.searchInput.on('focusout', this, this.checkIfNeedToCreateValueFromEvent);
+        this.searchInput.on('focus', this, this.showSearchMenu);
     }
 
     checkIfNeedToCreateValueFromEvent(event) {
         event.data.checkIfNeedToCreateValueFromInput();
+    }
+
+    showSearchMenu(event) {
+        console.log('focus');
+        setTimeout(function() {
+            if (!event.data.searchMenu.hasClass('show'))
+            $('.search-input-box').dropdown('toggle');
+        }, 150); //workaround to fire only after the click event
     }
 
     addKeyToSearchBox(key) {
@@ -113,9 +122,9 @@ class SearchBox {
         
         if (inputValue.length === 0 && key === 'Enter')
             event.data.sendData();
-
-        if (event.data.searchInput.data('value-mode')) {
-
+        
+            const isValueMode = event.data.searchInput.data('value-mode');
+        if (isValueMode) {
             if (key === ' ' || key == 'Enter') {
                 event.data.createSearchValueFromInput();
                 event.data.searchInput.val('');
@@ -151,7 +160,9 @@ class SearchBox {
     filterSearchMenuUsingInputValue(event) {
         if (!event.data.searchInput.data('value-mode')) {
             let inputValue = event.target.value.trim();
-            let keysThatDontMatchInput = event.data.keys.filter(value => !value.label.toUpperCase().includes(inputValue.toUpperCase()));
+            let keysThatDontMatchInput = event.data.keys
+                .filter(value => !value.label.toUpperCase().includes(inputValue.toUpperCase()))
+                .map( key => key.label);
             $('.menu-search-key').each((index, menuSearchKey) => {
                 if (keysThatDontMatchInput.includes(menuSearchKey.dataset.key))
                     $(menuSearchKey).hide();
