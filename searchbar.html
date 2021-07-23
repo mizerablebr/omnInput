@@ -5,7 +5,7 @@
     <Body>
         <div class="container-sm bg-light">
             <div id="searchBoxContainer"></div>
-            <button id="sendButton" type="button" class="btn btn-primary">Send</button>
+            <button id="sendButton" type="button" class="btn btn-primary">Send</button> <button id="errorButton" type="button" class="btn btn-danger">Display Error</button>
         </div>
     </Body>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -18,8 +18,11 @@
             var searchBox = SearchBox.create(keys, 'searchBoxContainer', '/post');
             searchBox.aditionalFormInput({key: '_csrf', value: 'haduken'});
             $('#sendButton').click(function() {searchBox.sendData()});
+            $('#errorButton').click(function() {searchBox.displayError('Error message')});
 
             searchBox.loadFromObject({"placa": "abc1234", "modelo": "fusca"});
+
+
         });
         
     </script>
