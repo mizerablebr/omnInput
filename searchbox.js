@@ -10,7 +10,7 @@ class SearchBox {
         this.messagemContainer = {};
         this.searchBoxContainerTemplate = '<div class="search-box border mx-3 mt-3 mb-3 p-2 d-flex bg-white" style="overflow-x: auto"><div class="search-input-box d-flex flex-grow-1" data-toggle="dropdown"><input class="search-input flex-grow-1 text-uppercase" data-value-mode="false" type="text" style="border: 0; outline:0;"/></div><div class="search-menu dropdown-menu mt-3" aria-labelledby="dropdownMenuButton"></div></div><div class="text-danger ml-3 mb-3"><small id="messageContainer" style="display: none;"></small></div>'
         this.keyItem = '<div class="search-item search-key px-1 mr-1 text-uppercase" data-key="{}" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
-        this.valueItem = '<div class="search-item search-value px-1 mr-2 text-uppercase" data-value="{}" style="background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
+        this.valueItem = '<div class="search-item search-value px-1 mr-3 text-uppercase" data-value="{}" style="background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
         this.menuItem = '<a class="menu-search-key dropdown-item" data-key="{}" href="#">{}</a>';
         this.containerId = 'searchBoxContainer';
 
