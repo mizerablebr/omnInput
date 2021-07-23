@@ -7,7 +7,7 @@ class SearchBox {
         this.searchBox = {};
         this.searchInputBox = {};
         this.searchInput = {};
-        this.searchBoxContainerTemplate = '<div class="search-box border m-3 p-2 d-flex bg-white"><div class="search-input-box d-flex flex-grow-1" data-toggle="dropdown"><input class="search-input flex-grow-1 text-uppercase" data-value-mode="false" type="text" style="border: 0; outline:0;"/></div><div class="search-menu dropdown-menu mt-3" aria-labelledby="dropdownMenuButton"></div></div>'
+        this.searchBoxContainerTemplate = '<div class="search-box border m-3 p-2 d-flex bg-white" style="overflow-x: auto"><div class="search-input-box d-flex flex-grow-1" data-toggle="dropdown"><input class="search-input flex-grow-1 text-uppercase" data-value-mode="false" type="text" style="border: 0; outline:0;"/></div><div class="search-menu dropdown-menu mt-3" aria-labelledby="dropdownMenuButton"></div></div>'
         this.keyItem = '<div class="search-item search-key px-1 mr-1 text-uppercase" data-key="{}" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
         this.valueItem = '<div class="search-item search-value px-1 mr-2 text-uppercase" data-value="{}" style="background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
         this.menuItem = '<a class="menu-search-key dropdown-item" data-key="{}" href="#">{}</a>';
@@ -24,10 +24,10 @@ class SearchBox {
         return this;
     }
 
-    static create(keys, containerId) {
+    static create(keys, containerId, action) {
         if (!Array.isArray(keys) || keys[0].label === undefined || keys[0].id === undefined)
             throw "Each item from the Array Keys must be a Object containing Label and Id. Ex.: {label: 'My Label', id: 'myId'}"
-        return new SearchBox(keys, containerId);
+        return new SearchBox(keys, containerId, action);
     }
 
     formatTemplate(term, template) {
@@ -183,7 +183,7 @@ class SearchBox {
 
         let form = document.createElement('form');
         form.setAttribute('method', 'POST');
-        form.setAttribute('action', '/post');
+        form.setAttribute('action', this.action);
 
         let inputId = '';
         let inputValue = '';
