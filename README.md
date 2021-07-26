@@ -1,7 +1,15 @@
 # OmnInput.js
 
 ## What's OmnInput.js (Omni Input)
-OmnInput is a UI component that replaces long HTML forms, with many inputs, putting everything together in just one input bar with filter and tokenization.
+OmnInput is a UI component that replaces long HTML forms, putting everything together in just one input bar with filter and tokenization.
+
+OmnInput.js allow you to replace this:
+
+![Form without OmnInput](https://raw.githubusercontent.com/mizerablebr/omnInput/master/examples/assets/formWithoutOmnInput.png)
+
+with this:
+
+![Form with OmnInput](https://raw.githubusercontent.com/mizerablebr/omnInput/master/examples/assets/formWithOmnInput.png)
 
 > 🚨 Importants Notes
 > - **OmnInput.js depends on [Bootstrap](https://github.com/twbs/bootstrap) and [jQuery](https://github.com/jquery/jquery), so you must add these dependencies to your project**
