@@ -1,4 +1,4 @@
-class SearchBox {
+class OmnInput {
     constructor(keys, containerId, action) {
         this.keys = keys;
         this.containerId = containerId;
@@ -12,7 +12,6 @@ class SearchBox {
         this.keyItem = '<div class="search-item search-key px-1 mr-1 text-uppercase" data-key="{}" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
         this.valueItem = '<div class="search-item search-value px-1 mr-3 text-uppercase" data-value="{}" style="background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
         this.menuItem = '<a class="menu-search-key dropdown-item" data-key="{}" href="#">{}</a>';
-        this.containerId = 'searchBoxContainer';
 
         this.initialSetup();
 
@@ -28,7 +27,7 @@ class SearchBox {
     static create(keys, containerId, action) {
         if (!Array.isArray(keys) || keys[0].label === undefined || keys[0].id === undefined)
             throw "Each item from the Array Keys must be a Object containing Label and Id. Ex.: {label: 'My Label', id: 'myId'}"
-        return new SearchBox(keys, containerId, action);
+        return new OmnInput(keys, containerId, action);
     }
 
     formatTemplate(term, template) {

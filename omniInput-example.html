@@ -4,7 +4,7 @@
     </head>
     <Body>
         <div class="container-sm bg-light">
-            <div id="searchBoxContainer"></div>
+            <div id="omnInputContainer"></div>
             <button id="sendButton" type="button" class="btn btn-primary">Send</button> <button id="errorButton" type="button" class="btn btn-danger">Display Error</button>
         </div>
     </Body>
@@ -15,12 +15,12 @@
         $(document).ready(function() {
             console.log('creating');
             const keys = [{label: 'Placa', id: 'placa'}, {label: 'Marca', id: 'marca'}, {label: 'Modelo', id: 'modelo'}];
-            var searchBox = SearchBox.create(keys, 'searchBoxContainer', '/post');
-            searchBox.aditionalFormInput({key: '_csrf', value: 'haduken'});
-            $('#sendButton').click(function() {searchBox.sendData()});
-            $('#errorButton').click(function() {searchBox.displayError('Error message')});
+            var omnInput = OmnInput.create(keys, 'omnInputContainer', '/post');
+            omnInput.aditionalFormInput({key: '_csrf', value: 'haduken'});
+            $('#sendButton').click(function() {omnInput.sendData()});
+            $('#errorButton').click(function() {omnInput.displayError('Error message')});
 
-            searchBox.loadFromObject({"placa": "abc1234", "modelo": "fusca"});
+            omnInput.loadFromObject({"placa": "abc1234", "modelo": "fusca"});
 
 
         });
