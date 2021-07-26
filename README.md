@@ -65,4 +65,4 @@ First of all, thank you for your contribution. If you want to contribute, feel f
 
 ## License
 
-[MIT License](LICENSE.md) © OmnInput.js
+[MIT License](LICENSE) © OmnInput.js
