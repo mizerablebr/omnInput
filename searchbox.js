@@ -260,12 +260,12 @@ class SearchBox {
     }
 
     displayError(errorMessage) {
-        this.#formatSearchBoxToDisplayError();
+        this.formatSearchBoxToDisplayError();
         this.messagemContainer.text(errorMessage);
         this.messagemContainer.show();
     }
 
-    #formatSearchBoxToDisplayError() {
+    formatSearchBoxToDisplayError() {
         this.searchBox.addClass('border-danger rounded');
         this.searchBox.removeClass('mb-3')
     }
