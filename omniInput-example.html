@@ -13,14 +13,18 @@
     <script src="./searchbox.js"></script>
     <script>
         $(document).ready(function() {
-            console.log('creating');
-            const keys = [{label: 'Placa', id: 'placa'}, {label: 'Marca', id: 'marca'}, {label: 'Modelo', id: 'modelo'}];
-            var omnInput = OmnInput.create(keys, 'omnInputContainer', '/post');
+            const keys = [{label: 'Plate', id: 'plate'}, {label: 'Brand', id: 'brand'}, {label: 'Model', id: 'model'}];
+            const componentId = 'omnInputContainer';
+            const postUrl =  '/post';
+
+            var omnInput = OmnInput.create(keys, componentId, postUrl);
+            
             omnInput.aditionalFormInput({key: '_csrf', value: 'haduken'});
+            
             $('#sendButton').click(function() {omnInput.sendData()});
             $('#errorButton').click(function() {omnInput.displayError('Error message')});
 
-            omnInput.loadFromObject({"placa": "abc1234", "modelo": "fusca"});
+            omnInput.loadFromObject({"plate": "abc1234", "model": "fusca"});
 
 
         });
