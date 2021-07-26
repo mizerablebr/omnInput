@@ -11,6 +11,10 @@ with this:
 
 ![Form with OmnInput](https://raw.githubusercontent.com/mizerablebr/omnInput/master/examples/assets/formWithOmnInput.png)
 
+
+[Live Preview](https://codepen.io/brunomiz/full/jOmYjaO)
+
+
 > 🚨 Importants Notes
 > - **OmnInput.js depends on [Bootstrap](https://github.com/twbs/bootstrap) and [jQuery](https://github.com/jquery/jquery), so you must add these dependencies to your project**
 
@@ -19,6 +23,7 @@ with this:
 
 - [OmnInput.js](#omninputjs)
   - [What's OmnInput.js (Omni Input)](#whats-omninputjs-omni-input)
+  - [Live Preview](https://codepen.io/brunomiz/full/jOmYjaO)
   - [Table of Contents](#table-of-contents)
   - [Usage](#usage)
   - [Contributing](#contributing)
