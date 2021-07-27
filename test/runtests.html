@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Run tests</title>
+</head>
+<body>
+  <div>
+    <ul id="testList"></ul>
+  </div>
+</body>
+<script src="tests.js"></script>
+<script>
+  const testResultTemplate = '<li>{0}: {1}</li>';
+  const testFailResultTemplate = '<li style="color: red">{0}: {1}</li>';
+
+  function formatToTemplate(data) {
+    const FAIL = 'fail';
+    const result = data[1] !== null ? data[1] : FAIL;
+    const resultingTemplate = result === FAIL ? testFailResultTemplate : testResultTemplate;
+    return resultingTemplate.replaceAll('{0}', data[0]).replaceAll('{1}', result);
+  }
+
+  document.addEventListener("DOMContentLoaded", function(event) {
+    const allFunctions = Object.getOwnPropertyNames(OmnInputTests)
+            .filter(item => typeof OmnInputTests[item] === 'function')
+            .map(func => OmnInputTests[func]);
+    const setupFunction = allFunctions.filter(test => test.name.toUpperCase() === 'SETUP')[0];
+    const allTests = allFunctions.filter(test => test.name.toUpperCase() !== 'SETUP');
+    allTests.forEach(test => {
+      if (setupFunction !== undefined)
+        setupFunction();
+      document.getElementById('testList').insertAdjacentHTML('beforeend', formatToTemplate([test.name, test()]));
+    });
+  });
+</script>
+</html>
