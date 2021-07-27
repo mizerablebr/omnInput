@@ -11,13 +11,14 @@ class OmnInput {
         this.scope = scope;
         this.searchBoxContainerTemplate = '<div class="search-box border mx-3 mt-3 mb-3 p-2 d-flex bg-white" style="overflow-x: auto"><div class="search-input-box d-flex flex-grow-1" data-toggle="dropdown"><input class="search-input flex-grow-1 text-uppercase" data-value-mode="false" type="text" style="border: 0; outline:0;"/></div><div class="search-menu dropdown-menu mt-5" aria-labelledby="dropdownMenuButton"></div></div><div class="text-danger ml-3 mb-3"><small id="messageContainer" style="display: none;"></small></div>'
         this.keyItem = '<div class="search-item search-key px-1 mr-1 text-uppercase" data-key="{}" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
-        this.valueItem = '<div class="search-item search-value px-1 mr-3 text-uppercase" data-value="{}" style="background-color: #dbdbdb; padding-top: .20rem;">{}<span class="search-item-delete ml-2 text-lowercase font-weight-bold" style="vertical-align: top;">x</span></div>'
+        this.valueItem = '<div class="search-item search-value px-1 mr-3 text-uppercase" data-value="{}" style="background-color: #dbdbdb; padding-top: .20rem;">{}<span class="search-item-delete ml-1 px-1 text-lowercase font-weight-bold" style="vertical-align: top;">x</span></div>'
         this.menuItem = '<a class="menu-search-key dropdown-item" data-key="{}" href="#">{}</a>';
 
         this.initialSetup(this.scope);
 
         this.addListenerToSearchKeys();
         this.addListenerToSearchInput();
+        this.addListenerToSearchItemDelete();
     }
 
     aditionalFormInput(aditionalInput) {
@@ -62,6 +63,15 @@ class OmnInput {
         menuSearchKeys.on('click', this, function(event){
             event.data.addKeyToSearchBox(event.target.dataset.key);
             event.data.searchInput.focus();
+        });
+    }
+
+    addListenerToSearchItemDelete() {
+        const searchItemDelete = $('.search-item-delete');
+        searchItemDelete.off();
+        searchItemDelete.on('click', this, function(event){
+            const searchItemValue = $(event.target).parent().data('value');
+            event.data.removeKeyValueFromSearchBoxByValue(searchItemValue);
         });
     }
 
@@ -152,6 +162,18 @@ class OmnInput {
         }
     }
 
+    removeKeyValueFromSearchBoxByValue(value) {
+        let searchItens = $('.search-item');
+        if (searchItens.length > 0) {
+            const valueItemToRemove = $(searchItens.filter('[data-value="'+ value + '"]')[0]);
+            const keyItemToRemove = valueItemToRemove.prev();
+
+            valueItemToRemove.remove();
+            keyItemToRemove.remove();
+            this.updateSearchMenu();
+        }
+    }
+
     createSearchValueFromInput() {
         let inputValue = this.searchInput.val();
         this.addValueToSearchBox(inputValue);
@@ -160,6 +182,7 @@ class OmnInput {
     addValueToSearchBox(value) {
         this.searchInputBox.before(this.formatTemplate(value, this.valueItem));
         this.searchInput.val('');
+        this.addListenerToSearchItemDelete();
         this.setKeyMode();
     }
 

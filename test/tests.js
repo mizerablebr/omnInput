@@ -69,6 +69,28 @@ class OmnInputTests {
         return assertNotContains(validations, FAIL);
     }
 
+    static givenClickEventOnSearchItemDeleteThenRemoveTheParentValueAndItsKey() {
+        let validations = [];
+        const addTwoKeyValuePairs = function() {OmnInputTests.omnInput.loadFromObject({"plate": "abc1234", "model": "fusca"});};
+        const countKeyValuePairs = function() {return OmnInputTests.omnInput.searchBox.find('.search-item-delete').length}
+        const clickFirstDeleteElement = function () {$(OmnInputTests.omnInput.searchBox.find('.search-item-delete')[0]).trigger('click')}
+        console.log(countKeyValuePairs());
+        addTwoKeyValuePairs();
+        console.log($(OmnInputTests.omnInput.searchBox.find('.search-item-delete')[0]));
+        $(OmnInputTests.omnInput.searchBox.find('.search-item-delete')[0]).trigger('click')
+        console.log(countKeyValuePairs());
+        validations.push(assertEquals(countKeyValuePairs(), 2));
+        console.log(validations);
+
+        clickFirstDeleteElement();
+
+        console.log(countKeyValuePairs());
+        validations.push(assertEquals(countKeyValuePairs(), 1));
+        console.log(countKeyValuePairs());
+        console.log(validations);
+        return assertNotContains(validations, FAIL);
+    }
+
 
 }
 const FAIL = "fail";
