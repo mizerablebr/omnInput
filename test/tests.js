@@ -3,7 +3,6 @@ class OmnInputTests {
     static testDoc = $('<html><body><div id="outsideContainer"><div id="omnInputContainer"></div></div></body></html>');
 
     static setUp() {
-        console.log('setup');
         const keys = [{label: 'Plate', id: 'plate'}, {label: 'Brand', id: 'brand'}, {label: 'Model', id: 'model'}];
         const componentId = 'omnInputContainer';
         const postUrl =  '/post';
@@ -29,6 +28,11 @@ class OmnInputTests {
 
     static afterCreateOmnInputThenMessageContainerIsCreated() {
         return assertTrue(OmnInputTests.testDoc.find('#messageContainer').length > 0);
+    }
+
+    static givenPressingEnterOnValueModeWithInputNotEmptyThenCreateSearchValueFromInput() {
+        let eventMock = {target: {value: "notEmpty"}, key: 'Enter', data: {createSearchValueFromInput(){console.log('executed')}, searchInput : {data(){return true}, val(){}}}};
+        OmnInputTests.omnInput.handleInputKeyPress(eventMock);
     }
 
 }

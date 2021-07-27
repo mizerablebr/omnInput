@@ -131,7 +131,7 @@ class OmnInput {
         
             const isValueMode = event.data.searchInput.data('value-mode');
         if (isValueMode) {
-            if (key === ' ' || key == 'Enter') {
+            if (key === 'Enter') {
                 event.data.createSearchValueFromInput();
                 event.data.searchInput.val('');
             }
