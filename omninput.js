@@ -1,5 +1,5 @@
 class OmnInput {
-    constructor(keys, containerId, action) {
+    constructor(keys, containerId, action, scope) {
         this.keys = keys;
         this.containerId = containerId;
         this.action = action;
@@ -8,15 +8,17 @@ class OmnInput {
         this.searchInputBox = {};
         this.searchInput = {};
         this.messagemContainer = {};
+        this.scope = scope;
         this.searchBoxContainerTemplate = '<div class="search-box border mx-3 mt-3 mb-3 p-2 d-flex bg-white" style="overflow-x: auto"><div class="search-input-box d-flex flex-grow-1" data-toggle="dropdown"><input class="search-input flex-grow-1 text-uppercase" data-value-mode="false" type="text" style="border: 0; outline:0;"/></div><div class="search-menu dropdown-menu mt-5" aria-labelledby="dropdownMenuButton"></div></div><div class="text-danger ml-3 mb-3"><small id="messageContainer" style="display: none;"></small></div>'
         this.keyItem = '<div class="search-item search-key px-1 mr-1 text-uppercase" data-key="{}" style="color: #707070; background-color: #dbdbdb; padding-top: .20rem;"><span>{}</span>:</div>'
-        this.valueItem = '<div class="search-item search-value px-1 mr-3 text-uppercase" data-value="{}" style="background-color: #dbdbdb; padding-top: .20rem;">{}</div>'
+        this.valueItem = '<div class="search-item search-value px-1 mr-3 text-uppercase" data-value="{}" style="background-color: #dbdbdb; padding-top: .20rem;">{}<span class="search-item-delete ml-1 px-1 text-lowercase font-weight-bold" style="vertical-align: top;">x</span></div>'
         this.menuItem = '<a class="menu-search-key dropdown-item" data-key="{}" href="#">{}</a>';
 
-        this.initialSetup();
+        this.initialSetup(this.scope);
 
         this.addListenerToSearchKeys();
         this.addListenerToSearchInput();
+        this.addListenerToSearchItemDelete();
     }
 
     aditionalFormInput(aditionalInput) {
@@ -24,24 +26,25 @@ class OmnInput {
         return this;
     }
 
-    static create(keys, containerId, action) {
+    static create(keys, containerId, action, scope) {
         if (!Array.isArray(keys) || keys[0].label === undefined || keys[0].id === undefined)
             throw "Each item from the Array Keys must be a Object containing Label and Id. Ex.: {label: 'My Label', id: 'myId'}"
-        return new OmnInput(keys, containerId, action);
+        return new OmnInput(keys, containerId, action, scope);
     }
 
     formatTemplate(term, template) {
-        return template.replace(/\{\}/g, term);
+        return template.replace(/{}/g, term);
     }
     
 
-    initialSetup() {
-        $('#' + this.containerId).html(this.searchBoxContainerTemplate);
-        this.searchMenu = $('.search-menu');
-        this.searchBox = $('.search-box');
-        this.searchInputBox = $('.search-input-box');
-        this.searchInput = $('.search-input');
-        this.messagemContainer = $('#messageContainer')
+    initialSetup(scopeToUse) {
+        let scope = $('#' + this.containerId, scopeToUse);
+        scope.html(this.searchBoxContainerTemplate);
+        this.searchMenu = $('.search-menu', scope);
+        this.searchBox = $('.search-box', scope);
+        this.searchInputBox = $('.search-input-box', scope);
+        this.searchInput = $('.search-input', scope);
+        this.messagemContainer = $('#messageContainer', scope)
 
         this.searchInputBox.dropdown();
 
@@ -60,6 +63,13 @@ class OmnInput {
         menuSearchKeys.on('click', this, function(event){
             event.data.addKeyToSearchBox(event.target.dataset.key);
             event.data.searchInput.focus();
+        });
+    }
+
+    addListenerToSearchItemDelete() {
+        this.searchBox.on('click', '.search-item-delete', this, function(event){
+            const searchItemValue = $(event.target).parent().data('value');
+            event.data.removeKeyValueFromSearchBoxByValue(searchItemValue);
         });
     }
 
@@ -129,7 +139,7 @@ class OmnInput {
         
             const isValueMode = event.data.searchInput.data('value-mode');
         if (isValueMode) {
-            if (key === ' ' || key == 'Enter') {
+            if (key === 'Enter') {
                 event.data.createSearchValueFromInput();
                 event.data.searchInput.val('');
             }
@@ -146,6 +156,18 @@ class OmnInput {
                 this.setValueMode();
             
             searchItens.last().remove();
+            this.updateSearchMenu();
+        }
+    }
+
+    removeKeyValueFromSearchBoxByValue(value) {
+        let searchItens = $('.search-item', this.scope);
+        if (searchItens.length > 0) {
+            const valueItemToRemove = $(searchItens.filter('[data-value="'+ value + '"]')[0]);
+            const keyItemToRemove = valueItemToRemove.prev();
+
+            valueItemToRemove.remove();
+            keyItemToRemove.remove();
             this.updateSearchMenu();
         }
     }
