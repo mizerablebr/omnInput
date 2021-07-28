@@ -1,6 +1,6 @@
 class OmnInputTests {
     static omnInput;
-    static testContext = $('<html><body><div id="outsideContainer"><div id="omnInputContainer"></div></div></body></html>');
+    static testContext = $('<html lang="en"><body><div id="outsideContainer"><div id="omnInputContainer"></div></div></body></html>');
 
     static setUp() {
         const keys = [{label: 'Plate', id: 'plate'}, {label: 'Brand', id: 'brand'}, {label: 'Model', id: 'model'}];
@@ -73,21 +73,13 @@ class OmnInputTests {
         let validations = [];
         const addTwoKeyValuePairs = function() {OmnInputTests.omnInput.loadFromObject({"plate": "abc1234", "model": "fusca"});};
         const countKeyValuePairs = function() {return OmnInputTests.omnInput.searchBox.find('.search-item-delete').length}
-        const clickFirstDeleteElement = function () {$(OmnInputTests.omnInput.searchBox.find('.search-item-delete')[0]).trigger('click')}
-        console.log(countKeyValuePairs());
+        const clickFirstDeleteElement = function () {OmnInputTests.testContext.find('.search-item-delete')[0].click()}
         addTwoKeyValuePairs();
-        console.log($(OmnInputTests.omnInput.searchBox.find('.search-item-delete')[0]));
-        $(OmnInputTests.omnInput.searchBox.find('.search-item-delete')[0]).trigger('click')
-        console.log(countKeyValuePairs());
         validations.push(assertEquals(countKeyValuePairs(), 2));
-        console.log(validations);
 
         clickFirstDeleteElement();
 
-        console.log(countKeyValuePairs());
         validations.push(assertEquals(countKeyValuePairs(), 1));
-        console.log(countKeyValuePairs());
-        console.log(validations);
         return assertNotContains(validations, FAIL);
     }
 

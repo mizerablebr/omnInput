@@ -33,7 +33,7 @@ class OmnInput {
     }
 
     formatTemplate(term, template) {
-        return template.replace(/\{\}/g, term);
+        return template.replace(/{}/g, term);
     }
     
 
@@ -67,9 +67,7 @@ class OmnInput {
     }
 
     addListenerToSearchItemDelete() {
-        const searchItemDelete = $('.search-item-delete');
-        searchItemDelete.off();
-        searchItemDelete.on('click', this, function(event){
+        this.searchBox.on('click', '.search-item-delete', this, function(event){
             const searchItemValue = $(event.target).parent().data('value');
             event.data.removeKeyValueFromSearchBoxByValue(searchItemValue);
         });
@@ -163,7 +161,7 @@ class OmnInput {
     }
 
     removeKeyValueFromSearchBoxByValue(value) {
-        let searchItens = $('.search-item');
+        let searchItens = $('.search-item', this.scope);
         if (searchItens.length > 0) {
             const valueItemToRemove = $(searchItens.filter('[data-value="'+ value + '"]')[0]);
             const keyItemToRemove = valueItemToRemove.prev();
@@ -182,7 +180,6 @@ class OmnInput {
     addValueToSearchBox(value) {
         this.searchInputBox.before(this.formatTemplate(value, this.valueItem));
         this.searchInput.val('');
-        this.addListenerToSearchItemDelete();
         this.setKeyMode();
     }
 
